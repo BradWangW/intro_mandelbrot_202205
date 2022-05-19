@@ -1,0 +1,144 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[UKenglish]{babel}
+\usepackage{mathtools,amssymb,amsthm}
+\usepackage{adjustbox,graphicx}
+\usepackage{hyperref}
+\usepackage[mathlines]{lineno}
+\include{linenopatch}
+
+\newtheorem{prop}{Proposition} % This defines a theorem-like environment. See https://www.overleaf.com/learn/latex/theorems_and_proofs
+\theoremstyle{definition}
+\newtheorem{lem}[prop]{Lemma}
+\newtheorem{thm}[prop]{Theorem}
+\newtheorem{cor}[prop]{Corollary}
+\newtheorem{rmk}[prop]{Remark}
+\newtheorem{defn}[prop]{Definition}
+
+% ========= Bibliography =========
+% These lines load the `biblatex' package
+% and read in the list of references from
+% References.bib
+%
+\usepackage{csquotes,biblatex}
+\addbibresource{References.bib}
+\emergencystretch=1em
+% ================================
+
+\title{An introduction to the Mandelbrot and Julia sets}
+\author{Brad Wang}
+\date{May 2022}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+``Clouds are not spheres, mountains are not cones, coastlines are not circles, and bark is not smooth, nor does lightning travel in a straight line.” (\autocite[Theme]{mandelbrot}) The French-American mathematician Benoit Mandelbrot used this to illustrate the anti-intuitive roughness of the amplified objects in his book \emph{`The Fractal Geometry of Nature'}. In this book, Benoit has dedicated a great contribution on top of the work of the French mathematicians Pierre Fatou and Gaston Julia in the earlier $20^{th}$ century. This report aims to convey a simple understanding of a part of their works, the Mandelbrot set and the Julia sets, and some beautiful structures, called \textbf{fractals}, that they are closely related to.
+
+\section{Mandelbrot set}
+
+The Mandelbrot set is a set of points on the complex plane. Consider a simple iterative complex function,
+
+\begin{equation*}
+z_{n+1} = z_n^2 + c, 
+\end{equation*}
+where $z_0 = 0$ is the starting point and $c\in\mathbb{C}$ is a complex constant. The behaviour of $z_n$ after iterations varies with the choice of $c$. In general, all possible $c$ values could be separated into two parts, based on whether the sequence $(z_n)$ converges to a finite number of certain values as $n\rightarrow\infty$. Those points with which the sequence has a finite limit, are said to be in the Mandelbrot set, or $\mathbf{M}$.
+
+\begin{defn}[{\autocite[Section 3.1]{fredriksson}}]\label{thm:Mts}
+For all $c\in\mathbb{C}$, $c$ is in the \textbf{Mandelbrot set} $\mathbf{M}$ if and only if given $z_{n+1} = z_n^2+c$ we have 
+
+\begin{equation*}
+\lim_{n\rightarrow\infty}|z_n| < \infty.
+\end{equation*}
+\end{defn}
+
+$\mathbf{M}$ has the appearance as shown in Figure \ref{fig:mdbt}. It is famous as a \textbf{fractal} structure because of its (quasi) self-similarity, which denotes that the Mandelbrot set is approximately similar to some parts of it in any arbitrarily small scale. 
+
+\begin{figure}
+    \adjincludegraphics[width=0.8\textwidth,center]{Mandelbrot.png} % This uses the adjustbox package to centre the image - the code is slightly neater than the alternatives
+    \caption{The Mandelbrot set $\mathbf{M}$ is colored in blue.}
+    \label{fig:mdbt}
+\end{figure}
+
+The sequence $(z_{n})$ could converge to more than one limit points (i.e. the function limit could have period more than $1$) on the complex plane with some deliberately chosen $c$ values in $\mathbf{M}$. Furthermore, calling the circular structures of $\mathbf{M}$ `Bulbs', the numbers of limits points of the function with $c$ being in different Bulbs fit in the Fibonacci Sequence (\autocite[Section 3.2]{emily}), as shown in Figure \ref{fig:prds}.
+
+\begin{figure}
+    \adjincludegraphics[width=0.8\textwidth,center]{Periods.png} % This uses the adjustbox package to centre the image - the code is slightly neater than the alternatives
+    \caption{\autocite{wikimedia} The numbers represents the periods of the function limits with $c$ in different areas. The two largest Bulbs give periods $1$ and $2$; the third largest Bulb gives $3$, the sum of $1$ and $2$; the largest Bulb between $2$-Bulb and $3$-Bulb gives $5$, the sum of $2$ and $3$; the largest Bulb between $2$-Bulb and $5$-Bulb gives $7$, the sum of $2$ and $5$... The largest Bulb between any two Blubs gives a period that equals the sum of what the two give: The Fibonacci Sequence is constructed in a very similar way.}
+    \label{fig:prds}
+\end{figure}
+
+There are a few more properties of $\mathbf{M}$.
+
+\begin{lem}[{\autocite[Page 92]{ewing}}]
+Let $\mathbf{M} \subset \mathbb{C}$ be the Mandelbrot set, then we have
+
+\begin{enumerate}
+    \item Let $c\in\mathbb{C}$ such that $|c|<1$, then $c\in\mathbf{M}$, 
+    \item Let $c\in\mathbb{C}$ such that $|c|>2$, then $c\notin\mathbf{M}$, 
+\end{enumerate}
+where the circle $|c| = 2$ is called the bailout radius of $\mathbf{M}$ (\autocite[Section 3.1]{fredriksson}).
+\end{lem}
+
+It turns out the Mandelbrot set is a compact, closed and path-connected subset of $\mathbb{C}$ (\autocite[Page 95]{ewing}), where `being a path-connected subset' is equivalent to `being a domain' (\autocite[Page 6]{belk}). A natural following questions is, what is the area of $\mathbf{M}$? We know it has to be a finite value as $\mathbf{M}$ could be entirely enclosed by a circle of radius $2$. Based the statistical approach of pixel counting, this value is approximated to be around $1.506484$ (\autocite{mitchell}). The analytical lower and upper bounds were given to be around $1.3744$ and $1.71$ (\autocite[Page 71]{ewing_schober}) through a mapping $\psi$ that maps the exterior of the unit circle to the exterior of $\mathbf{M}$ (\autocite[Page 69]{ewing_schober}) by John H. Ewing and Glenn Schober, and were published in their book \emph{`The area of the Mandelbrot set'} in 1991. However, the significant discrepancy remains unsolved as both methods have drawbacks (round-off errors for the former and extremely slow convergence for the latter) and neither of them could have been evidently confirmed (\autocite[Page 99]{ewing}).
+
+\section{Julia sets}
+
+Despite the later attendance of Julia sets, they were being studied actually several decades earlier than the Mandelbrot set. They are constructed based on the same iterative function $z_{n+1} = z_n^2 + c$, but rather with $c$ fixed, as in the following way. A (filled-in) Julia set, denoted by $\mathbf{K}_c$, consists of all starting values $z_0\in\mathbb{C}$ with which the sequence $(z_n)$ is not divergent. Apparently there are more than one Julia sets, each corresponding to a specific $c$ value.
+
+\begin{defn}[{\autocite[Page 587]{tan}}]
+For any $c\in\mathbb{C}$, the \textbf{filled-in Julia set} $\mathbf{K}_c$ contains a point $z_0\in\mathbb{C}$ if and only if given $z_{n+1} = z_n^2+c$ we have 
+
+\begin{equation*}
+\lim_{n\rightarrow\infty}|z_n| < \infty.
+\end{equation*}
+
+The corresponding \textbf{Julia set} is the \textbf{boundary} of $\mathbf{K}_c$, denoted by 
+
+\begin{equation*}
+    \mathbf{J}_c = \partial\mathbf{K}_c.
+\end{equation*}
+\end{defn}
+
+It turns out that for any $c\in\mathbb{C}$, the filled-in Julia set $\mathbf{K}_c$ is a closed and non-empty subset of $\mathbb{C}$ (\autocite[Theorem 1]{bargmann}). However, it is not necessarily a domain, unlike the Mandelbrot set $\mathbf{M}$. Here are some visualizations shown in Figure \ref{fig:jula}. Like the Mandelbrot set, the Julia sets possess strong self-similarity and are fractal structures as well. 
+
+\begin{figure}
+    \adjincludegraphics[width=0.8\textwidth,center]{Julias.png} % This uses the adjustbox package to centre the image - the code is slightly neater than the alternatives
+    \caption{\autocite{bourke} Some visualizations of $\mathbf{K}_c$: $c = 0.8i$ (top-left); $c = 0.37+0.1i$ (top-right); $c = 0.355 + 0.355i$ (bottom-left); $c = 0.34 -0.05i$ (bottom-right).}
+    \label{fig:jula}
+\end{figure}
+
+\section{Connections}
+
+As mentioned earlier, filled-in Julia sets are not necessarily domains, and in fact the path-connectedness of them is intimately related to the Mandelbrot set.
+
+\begin{thm}[{\autocite[Theorem 4 \& Corollary 5]{belk}}]
+For all $c\in\mathbb{C}$, the filled-in Julia set $\mathbf{K}_c$ of $z_{n+1} = z_n^2+c$ is a domain if and only if $c\in \mathbf{M}$. 
+\end{thm}
+
+\begin{rmk}[{\autocite{bourke}}]
+For a filled-in Julia set $\mathbf{J}_c$, $c$ being outside the Mandelbrot set would result in a group of disconnected regions, which is often referred as `Cantor dust', a fractal, disconnected subset of $\mathbb{C}$.
+\end{rmk}
+
+Some Julia sets of different $c$ are shown in Figure \ref{fig:cntd} to help catch the intuition.
+
+\begin{figure}
+    \adjincludegraphics[width=0.8\textwidth,center]{Connectedness.png} % This uses the adjustbox package to centre the image - the code is slightly neater than the alternatives
+    \caption{\autocite{bourke} The Mandelbrot set $\mathbf{M}$ and some filled-in Julia sets $\mathbf{K}_c$. The red points are the constants $c$ with which the Julia sets $\mathbf{K}_c$ are constructed. Clearly points in $\mathbf{M}$ give connected $\mathbf{K}_c$, while the one not in $\mathbf{M}$ gives some very fragmented pieces of regions, which are disconnected.}
+    \label{fig:cntd}
+\end{figure}
+
+This allows us to make a definitional rectification to the Mandelbrot set to harmonize with the chronological order in which the Mandelbrot set and the Julia sets were studied in general separately. We use the new definition as the closure of this report. 
+
+\begin{defn}[{\autocite[Page 9]{belk}}]
+The Mandelbrot set $\mathbf{M}$ is defined by
+
+\begin{equation*}
+\mathbf{M} = \left\{c\in\mathbb{C} \mid \mathbf{K}_c \text{ of } z_{n+1} = z_n^2 + c \text{ is a domain}\right\}.
+\end{equation*}
+\end{defn}
+
+\printbibliography % This command prints the cited references.
+\end{document}
